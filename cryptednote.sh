@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##################################
-##   CRYPTEDNOTE - version 0.2  ##
+##   CRYPTEDNOTE - version 0.3  ##
 ##   © Marcello Zaniboni 2025   ##
 ############################################################################
 ## This program allows you to manage encrypted personal notes. The        ##
@@ -141,6 +141,7 @@ fi
 if [ $(check_command "7z") -eq 0 -o \
 	$(check_command "whoami") -eq 0 -o \
 	$(check_command "clear") -eq 0 -o \
+	$(check_command "cut") -eq 0 -o \
 	$(check_command "stat") -eq 0 -o \
 	$(check_command "${note_editor}") -eq 0 -o \
 	$(check_command "sha512sum") -eq 0 ]; then
@@ -179,7 +180,7 @@ if [ ! -f "$CONF_FILE" ]; then
 		print_error_exit "the passwords are not equal"
 	fi
 	hash=$(echo -n "$pw1" | sha512sum | cut -d' ' -f1)
-	echo "# This configuration file war generated automatically and contains" > "$CONF_FILE"
+	echo "# This configuration file was generated automatically and contains" > "$CONF_FILE"
 	echo "# the main password." >> "$CONF_FILE"
 	echo >> "$CONF_FILE"
 	echo "readonly PASSWORD_CHECK=\"${hash}\"" >> "$CONF_FILE"
@@ -210,7 +211,7 @@ fi
 
 ## read the password and test checksum (if defined)
 echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
-echo "cryptednote v. 0.1"
+echo "cryptednote v. 0.3"
 echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 echo
 if [ "$password" == "" ]; then
@@ -272,6 +273,7 @@ if [ "$n" -eq "0" ]; then
 	else
 		# delete the file in the work dir
 		rm "$work_fname"
+		clear
 	fi
 	cd - > /dev/null 2>&1
 
@@ -299,6 +301,7 @@ else
 			if [ ! -f "$work_fname" ]; then
 				print_error_exit "cannot find the file $work_fname"
 			fi
+			clear
 			work_fname_hash_t0=$(sha512sum "$work_fname" | cut -f1 -d' ')
 			$note_editor "$work_fname"
 			work_fname_hash_t1=$(sha512sum "$work_fname" | cut -f1 -d' ')
@@ -311,6 +314,7 @@ else
 					echo "  $work_fname"
 				else
 					rm "$work_fname" # delete the file in the work dir
+					clear
 				fi
 			else
 				rm "$work_fname" # delete the file in the work dir
