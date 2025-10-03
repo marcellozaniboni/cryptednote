@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 ##################################
-##   CRYPTEDNOTE - version 0.3  ##
+##   CRYPTEDNOTE - version 0.4  ##
 ##   © Marcello Zaniboni 2025   ##
 ############################################################################
 ## This program allows you to manage encrypted personal notes. The        ##
 ## encryption is based on 7z, which must therefore be installed.          ##
 ## At the first run, you will be asked for a main password, wich will be  ##
 ## used to encrypt all your notes. Its hash will be saved in the          ##
-## directory CONF_DIR (see below).
+## directory CONF_DIR (see below).                                        ##
 ############################################################################
 ## This program is free software; you can redistribute it and/or   ##
 ## modify it under the terms of the GNU General Public License as  ##
@@ -143,9 +143,10 @@ if [ $(check_command "7z") -eq 0 -o \
 	$(check_command "clear") -eq 0 -o \
 	$(check_command "cut") -eq 0 -o \
 	$(check_command "stat") -eq 0 -o \
+	$(check_command "tr") -eq 0 -o \
 	$(check_command "${note_editor}") -eq 0 -o \
 	$(check_command "sha512sum") -eq 0 ]; then
-	print_error_exit "one of the following commands not found: 7z, clear, sha512sum, stat, ${note_editor}, whoami"
+	print_error_exit "one of the following commands not found: 7z, clear, sha512sum, stat, tr, ${note_editor}, whoami"
 fi
 
 ## check for data dir and create it if it does not exist
@@ -177,11 +178,11 @@ if [ ! -f "$CONF_FILE" ]; then
 	read -sp "password (1/2): " pw1; echo
 	read -sp "password (2/2): " pw2; echo; echo
 	if [ "$pw1" != "$pw2" ]; then
-		print_error_exit "the passwords are not equal"
+		print_error_exit "the passwords do not match"
 	fi
 	hash=$(echo -n "$pw1" | sha512sum | cut -d' ' -f1)
 	echo "# This configuration file was generated automatically and contains" > "$CONF_FILE"
-	echo "# the main password." >> "$CONF_FILE"
+	echo "# the main password hash." >> "$CONF_FILE"
 	echo >> "$CONF_FILE"
 	echo "readonly PASSWORD_CHECK=\"${hash}\"" >> "$CONF_FILE"
 	echo "configuration file created"; echo
@@ -211,7 +212,7 @@ fi
 
 ## read the password and test checksum (if defined)
 echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
-echo "cryptednote v. 0.3"
+echo "cryptednote v. 0.4"
 echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 echo
 if [ "$password" == "" ]; then
