@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##################################
-##   CRYPTEDNOTE - version 0.4  ##
+##   CRYPTEDNOTE - version 0.5  ##
 ##   © Marcello Zaniboni 2025   ##
 ############################################################################
 ## This program allows you to manage encrypted personal notes. The        ##
@@ -212,7 +212,7 @@ fi
 
 ## read the password and test checksum (if defined)
 echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
-echo "cryptednote v. 0.4"
+echo "cryptednote v. 0.5"
 echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 echo
 if [ "$password" == "" ]; then
@@ -236,7 +236,7 @@ echo " - \"0\" to create a new one"
 echo " - \"q\" to quit"
 while true; do
     read -p "Your choice: " n
-   	if [ "${n,,}" == "q" ]; then exit 0; fi
+   	if [ "${n,,}" == "q" ]; then clear; exit 0; fi
     if [[ "$n" =~ ^-?[0-9]+$ ]]; then
         break
     fi
