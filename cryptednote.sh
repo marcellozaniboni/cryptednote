@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##################################
-##   CRYPTEDNOTE - version 0.5  ##
+##   CRYPTEDNOTE - version 0.6  ##
 ##   © Marcello Zaniboni 2025   ##
 ############################################################################
 ## This program allows you to manage encrypted personal notes. The        ##
@@ -126,6 +126,8 @@ function get_note_name_by_number() {
 function print_error_exit() {
 	echo -e "\e[91merror\e[0m - $1"
 	echo
+	sleep 6
+	clear
 	exit 1
 }
 
@@ -212,7 +214,7 @@ fi
 
 ## read the password and test checksum (if defined)
 echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
-echo "cryptednote v. 0.5"
+echo "cryptednote v. 0.6"
 echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 echo
 if [ "$password" == "" ]; then
@@ -269,8 +271,7 @@ if [ "$n" -eq "0" ]; then
 	7z a -mhe=on -p${password} "$compr_fname" "${notename}.txt"
 	status=$?
 	if [ "$status" -ne "0" ]; then
-		echo "Error while encrypting the note recover manually the temporary file:"
-		echo "  $work_fname"
+		print_error_exit "Error while encrypting the note recover manually the temporary file: \"$work_fname\""
 	else
 		# delete the file in the work dir
 		rm "$work_fname"
